@@ -1,0 +1,17 @@
+{
+    "name": "gaborfarkas/user_auth",
+    "autoload": {
+        "psr-4": {
+            "UserAuth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gabor Farkas",
+            "email": "gabor.farkas0211@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
