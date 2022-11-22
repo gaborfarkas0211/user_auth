@@ -3,7 +3,6 @@
 namespace UserAuth\App\Controllers;
 
 use UserAuth\App\Models\User;
-use UserAuth\Services\Database\DatabaseConnection;
 use UserAuth\App\Requests\LoginRequest;
 
 class UserController extends Controller
@@ -14,7 +13,7 @@ class UserController extends Controller
         $this->validateRequest($request);
 
         $params = $request->getParams();
-        $user = (new User(new DatabaseConnection()))->select(['username' => $params['username']])->first();
+        $user = User::findByUsername($params['username']);
 
         if ($user->exists() && $user->login($params['password'])) {
             echo $this->success($user->getAttributeS());
