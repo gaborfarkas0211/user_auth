@@ -2,6 +2,7 @@
 
 namespace UserAuth\App\Controllers;
 
+use UserAuth\App\Enums\StatusCodeEnum;
 use UserAuth\App\Requests\RequestInterface;
 use UserAuth\Exceptions\ValidationException;
 use stdClass;
@@ -10,16 +11,19 @@ class Controller
 {
     public function success(array|stdClass $data = []): string
     {
-        header('HTTP/1.1 200 OK');
-
-        return json_encode(['success' => true, 'data' => $data]);
+        return $this->response(StatusCodeEnum::OK, $data);
     }
 
-    public function notFound(): string
+    public function badRequest(array|stdClass $data = []): string
     {
-        header('HTTP/1.1 404 Not Found');
+        return $this->response(StatusCodeEnum::BAD_REQUEST, $data);
+    }
 
-        return json_encode(['success' => false, 'data' => []]);
+    public function response(StatusCodeEnum $statusCode, array|stdClass $data = []): string
+    {
+        header('HTTP/1.1 ' . $statusCode->value . ' ' . $statusCode->getMessage());
+
+        return json_encode(['success' => $statusCode->isSuccess(), 'data' => $data]);
     }
 
     protected function validateRequest(RequestInterface $request): void
@@ -27,9 +31,7 @@ class Controller
         try {
             $request->validate();
         } catch (ValidationException $e) {
-            header('HTTP/1.1 422 Unprocessable Entity');
-
-            echo json_encode(['success' => false, 'data' => ['error' => $request->getErrors()]]);
+            echo $this->response(StatusCodeEnum::UNPROCESSABLE_ENTITY, $request->getErrors());
             die;
         }
     }

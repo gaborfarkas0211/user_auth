@@ -22,6 +22,6 @@ class UserController extends Controller
             return;
         }
 
-        echo $this->success(['error' => 'Username or password incorrect']);
+        echo $this->badRequest( ['error' => 'Username or password incorrect']);
     }
 }
